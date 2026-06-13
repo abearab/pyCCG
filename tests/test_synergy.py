@@ -2,9 +2,14 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import pytest
+import importlib.util
+from pathlib import Path
 
-from pyctg.synergy import CTG_synergy
-import pyctg.synergy as synergy_module
+module_path = Path(__file__).resolve().parents[1] / "pyctg" / "synergy.py"
+spec = importlib.util.spec_from_file_location("pyctg_synergy_module", module_path)
+synergy_module = importlib.util.module_from_spec(spec)
+spec.loader.exec_module(synergy_module)
+CTG_synergy = synergy_module.CTG_synergy
 
 
 def _sample_ctg_synergy():
