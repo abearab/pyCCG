@@ -2,14 +2,18 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import pytest
-import importlib.util
-from pathlib import Path
+import sys
+import types
 
-module_path = Path(__file__).resolve().parents[1] / "pyctg" / "synergy.py"
-spec = importlib.util.spec_from_file_location("pyctg_synergy_module", module_path)
-synergy_module = importlib.util.module_from_spec(spec)
-spec.loader.exec_module(synergy_module)
-CTG_synergy = synergy_module.CTG_synergy
+py50_stub = types.ModuleType("py50")
+py50_stub.Calculator = object
+py50_stub.PlotCurve = object
+py50_stub.CBMARKERS = []
+py50_stub.CBPALETTE = []
+sys.modules.setdefault("py50", py50_stub)
+
+from pyctg.synergy import CTG_synergy
+import pyctg.synergy as synergy_module
 
 
 def _sample_ctg_synergy():
@@ -25,7 +29,7 @@ def _sample_ctg_synergy():
     return CTG_synergy(df=df, wide_treatment="drugA", narrow_treatment="drugB")
 
 
-def test_plot_synergy_heatmap_accepts_single_element_ndarray_axes(monkeypatch):
+def test_plot_synergy_heatmap_accepts_single_element_ndarray_axis(monkeypatch):
     ctg = _sample_ctg_synergy()
     fig, ax = plt.subplots()
     ax_array = np.array([ax], dtype=object)
