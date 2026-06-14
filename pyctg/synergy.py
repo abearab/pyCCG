@@ -2,7 +2,50 @@ import pandas as pd
 import numpy as np
 from synergy.combination import Bliss
 from synergy.combination.loewe import Loewe
-from synergy.utils.plots import plot_heatmap
+
+
+def _dose_edges(values):
+    values = np.asarray(values, dtype=float)
+    if values.size <= 1:
+        center = values[0] if values.size == 1 else 0.0
+        return np.array([center - 0.5, center + 0.5], dtype=float)
+
+    mids = (values[:-1] + values[1:]) / 2.0
+    first = values[0] - (mids[0] - values[0])
+    last = values[-1] + (values[-1] - mids[-1])
+    return np.concatenate(([first], mids, [last]))
+
+
+def _plot_heatmap(d1, d2, E, title=None, xlabel=None, ylabel=None, cmap="PRGn", ax=None, **kwargs):
+    import matplotlib.pyplot as plt
+
+    if ax is None:
+        ax = plt.gca()
+
+    center_on_zero = kwargs.pop("center_on_zero", False)
+    heatmap_df = pd.DataFrame({"d1": d1, "d2": d2, "E": E}).pivot_table(
+        index="d2", columns="d1", values="E", aggfunc="mean"
+    ).sort_index().sort_index(axis=1)
+
+    x = heatmap_df.columns.to_numpy(dtype=float)
+    y = heatmap_df.index.to_numpy(dtype=float)
+    z = heatmap_df.to_numpy(dtype=float)
+
+    if center_on_zero and "vmin" not in kwargs and "vmax" not in kwargs and np.isfinite(z).any():
+        bound = np.nanmax(np.abs(z))
+        kwargs["vmin"] = -bound
+        kwargs["vmax"] = bound
+
+    mesh = ax.pcolormesh(_dose_edges(x), _dose_edges(y), z, cmap=cmap, shading="auto", **kwargs)
+    mesh.colorbar = ax.figure.colorbar(mesh, ax=ax)
+    ax.set_xticks(x)
+    ax.set_yticks(y)
+    if title is not None:
+        ax.set_title(title)
+    if xlabel is not None:
+        ax.set_xlabel(xlabel)
+    if ylabel is not None:
+        ax.set_ylabel(ylabel)
 
 
 class CTG_synergy:
@@ -55,7 +98,7 @@ class CTG_synergy:
         if ylabel == 'auto':
             ylabel = self.narrow_treatment
 
-        plot_heatmap(
+        _plot_heatmap(
             d1, d2, 
             E, 
             title=title,
