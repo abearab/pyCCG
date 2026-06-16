@@ -48,8 +48,8 @@ def _plot_heatmap(d1, d2, E, title=None, xlabel=None, ylabel=None, cmap="PRGn", 
         ax.set_ylabel(ylabel)
 
 
-class CTG_synergy:
-    """Data class for CTG synergy analysis
+class CCG_synergy:
+    """Data class for CCG synergy analysis
     Assuming the experiment is a dose-titration experiment with 2 drugs
     happening in the middle 60 wells of a 96-well plate
     """
@@ -167,7 +167,7 @@ class CTG_synergy:
         
         return df
 
-def read_CTG_synergy_data(filename):
+def read_CCG_synergy_data(filename):
     data = pd.read_csv(filename,sep='\t', header=0, index_col=None, skiprows=1)
 
     #TODO: come up with a better way to get the treatment names
@@ -200,4 +200,9 @@ def read_CTG_synergy_data(filename):
     df['viability'] = (df['ctg'] / df['baseline'])
     del df['baseline']
 
-    return CTG_synergy(df, wide_treatment, narrow_treatment)
+    return CCG_synergy(df, wide_treatment, narrow_treatment)
+
+
+# Backward compatibility aliases
+CTG_synergy = CCG_synergy
+read_CTG_synergy_data = read_CCG_synergy_data

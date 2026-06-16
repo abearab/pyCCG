@@ -1,1 +1,1 @@
-**pyCTG – python toolbox for CellTiter-Glo® cell viability assay**
+**pyCCG – python framework for dose-response analysis and plotting**

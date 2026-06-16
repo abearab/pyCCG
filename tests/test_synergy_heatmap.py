@@ -5,11 +5,11 @@ import pandas as pd
 import importlib.util
 from pathlib import Path
 
-_SYNERGY_PATH = Path(__file__).resolve().parents[1] / "pyctg" / "synergy.py"
-_SPEC = importlib.util.spec_from_file_location("pyctg_synergy", _SYNERGY_PATH)
+_SYNERGY_PATH = Path(__file__).resolve().parents[1] / "pyccg" / "synergy.py"
+_SPEC = importlib.util.spec_from_file_location("pyccg_synergy", _SYNERGY_PATH)
 _MODULE = importlib.util.module_from_spec(_SPEC)
 _SPEC.loader.exec_module(_MODULE)
-CTG_synergy = _MODULE.CTG_synergy
+CCG_synergy = _MODULE.CCG_synergy
 
 
 def _example_df():
@@ -26,7 +26,7 @@ def _example_df():
 
 def test_plot_synergy_heatmap_default_labels_and_colorbar():
     fig, ax = plt.subplots()
-    CTG_synergy(_example_df(), "drug_a", "drug_b").plot_synergy_heatmap(
+    CCG_synergy(_example_df(), "drug_a", "drug_b").plot_synergy_heatmap(
         query='cell_type == "A"', ax=ax
     )
 
@@ -38,7 +38,7 @@ def test_plot_synergy_heatmap_default_labels_and_colorbar():
 
 def test_plot_synergy_heatmap_without_colorbar():
     fig, ax = plt.subplots()
-    CTG_synergy(_example_df(), "drug_a", "drug_b").plot_synergy_heatmap(
+    CCG_synergy(_example_df(), "drug_a", "drug_b").plot_synergy_heatmap(
         query='cell_type == "A"', ax=ax, colorbar=False
     )
 
