@@ -1,9 +1,13 @@
 from .synergy import (
+    read_CCG_synergy_data,
+    CCG_synergy,
     read_CTG_synergy_data,
-    CTG_synergy, 
+    CTG_synergy,
 )
 
 from .titration import (
+    read_CCG_titration_data,
+    plot_CCG_titration,
     read_CTG_titration_data, 
     plot_CTG_titration,
 )

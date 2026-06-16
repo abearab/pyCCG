@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 from py50 import Calculator, PlotCurve, CBMARKERS, CBPALETTE
 
-def read_CTG_titration_data(filename):
+def read_CCG_titration_data(filename):
     data = pd.read_csv(
         filename,
         sep='\t',
@@ -39,7 +39,7 @@ def read_CTG_titration_data(filename):
     return df
 
 
-def plot_CTG_titration(ctg_data, treatment_name, value_col='viability', title=None, ymax=1.1, ymin=-0.1):
+def plot_CCG_titration(ctg_data, treatment_name, value_col='viability', title=None, ymax=1.1, ymin=-0.1):
     df = ctg_data.query(
         f'treatment == "{treatment_name}"' # & `Compound Conc` < 10000'
     ).drop(columns=['treatment']).pivot(index=['cell_type','Compound Conc'], columns='replicate', values=value_col)
@@ -74,3 +74,8 @@ def plot_CTG_titration(ctg_data, treatment_name, value_col='viability', title=No
     )
 
     return figure, ic50
+
+
+# Backward compatibility aliases
+read_CTG_titration_data = read_CCG_titration_data
+plot_CTG_titration = plot_CCG_titration
