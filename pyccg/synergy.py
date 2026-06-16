@@ -49,7 +49,7 @@ def _plot_heatmap(d1, d2, E, title=None, xlabel=None, ylabel=None, cmap="PRGn", 
 
 
 class CCG_synergy:
-    """Data class for CTG synergy analysis
+    """Data class for CCG synergy analysis
     Assuming the experiment is a dose-titration experiment with 2 drugs
     happening in the middle 60 wells of a 96-well plate
     """
