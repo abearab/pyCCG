@@ -5,8 +5,8 @@ import pandas as pd
 import importlib.util
 from pathlib import Path
 
-_SYNERGY_PATH = Path(__file__).resolve().parents[1] / "pyctg" / "synergy.py"
-_SPEC = importlib.util.spec_from_file_location("pyctg_synergy", _SYNERGY_PATH)
+_SYNERGY_PATH = Path(__file__).resolve().parents[1] / "pyccg" / "synergy.py"
+_SPEC = importlib.util.spec_from_file_location("pyccg_synergy", _SYNERGY_PATH)
 _MODULE = importlib.util.module_from_spec(_SPEC)
 _SPEC.loader.exec_module(_MODULE)
 CTG_synergy = _MODULE.CTG_synergy
