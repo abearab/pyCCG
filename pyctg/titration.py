@@ -46,12 +46,15 @@ def plot_CTG_titration(ctg_data, treatment_name, value_col='viability', title=No
     df.reset_index(inplace=True)
     df.columns.name = None
 
+    # Get the replicate column names dynamically
+    replicate_cols = [col for col in df.columns if col not in ['cell_type', 'Compound Conc']]
+
     data = Calculator(df)
 
     ic50 = data.calculate_ic50(
         name_col='cell_type',
         concentration_col='Compound Conc',
-        response_col=['rep1', 'rep2', 'rep3'],
+        response_col=replicate_cols,
     )
 
     data = PlotCurve(df)
@@ -62,7 +65,7 @@ def plot_CTG_titration(ctg_data, treatment_name, value_col='viability', title=No
 
     figure = data.multi_curve_plot(name_col='cell_type',
                                 concentration_col='Compound Conc',
-                                response_col=['rep1', 'rep2', 'rep3'], # % Inhibition Avg
+                                response_col=replicate_cols,
                                 plot_title=title,
                                 xlabel=treatment_label,
                                 ylabel='Viability',
