@@ -76,11 +76,7 @@ class CTG_synergy:
 
         return df
     
-    def plot_synergy_heatmap(self, query, ax, value_col='viability', xlabel='auto', ylabel='auto', remove_ticks=False, title=None, cmap="PRGn", colorbar=True, **args):
-        if isinstance(ax, np.ndarray):
-            if ax.size == 0:
-                raise ValueError("ax cannot be an empty ndarray")
-            ax = ax.flat[0]
+    def plot_heatmap(self, query, ax, value_col='viability', xlabel='auto', ylabel='auto', remove_ticks=False, title=None, cmap="PRGn", colorbar=True, **args):
         
         # calculate bliss synergy if needed
         if value_col in ['bliss','loewe'] and value_col not in self.df.columns:

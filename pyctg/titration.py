@@ -51,11 +51,11 @@ def plot_CTG_titration(ctg_data, treatment_name, value_col='viability', title=No
 
     data = Calculator(df)
 
-    ic50 = data.calculate_ic50(
-        name_col='cell_type',
-        concentration_col='Compound Conc',
-        response_col=replicate_cols,
-    )
+    # ic50 = data.calculate_ic50(
+    #     name_col='cell_type',
+    #     concentration_col='Compound Conc',
+    #     response_col=['rep1', 'rep2', 'rep3'],
+    # )
 
     data = PlotCurve(df)
     
@@ -76,4 +76,5 @@ def plot_CTG_titration(ctg_data, treatment_name, value_col='viability', title=No
                                 line_color=CBPALETTE, marker=CBMARKERS
     )
 
-    return figure, ic50
+    # return figure, ic50
+    return figure
