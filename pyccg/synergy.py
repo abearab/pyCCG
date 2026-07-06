@@ -4,52 +4,8 @@ from synergy.combination import Bliss
 from synergy.combination.loewe import Loewe
 
 
-def _dose_edges(values):
-    values = np.asarray(values, dtype=float)
-    if values.size <= 1:
-        center = values[0] if values.size == 1 else 0.0
-        return np.array([center - 0.5, center + 0.5], dtype=float)
-
-    mids = (values[:-1] + values[1:]) / 2.0
-    first = values[0] - (mids[0] - values[0])
-    last = values[-1] + (values[-1] - mids[-1])
-    return np.concatenate(([first], mids, [last]))
-
-
-def _plot_heatmap(d1, d2, E, title=None, xlabel=None, ylabel=None, cmap="PRGn", ax=None, **kwargs):
-    import matplotlib.pyplot as plt
-
-    if ax is None:
-        ax = plt.gca()
-
-    center_on_zero = kwargs.pop("center_on_zero", False)
-    heatmap_df = pd.DataFrame({"d1": d1, "d2": d2, "E": E}).pivot_table(
-        index="d2", columns="d1", values="E", aggfunc="mean"
-    ).sort_index().sort_index(axis=1)
-
-    x = heatmap_df.columns.to_numpy(dtype=float)
-    y = heatmap_df.index.to_numpy(dtype=float)
-    z = heatmap_df.to_numpy(dtype=float)
-
-    if center_on_zero and "vmin" not in kwargs and "vmax" not in kwargs and np.isfinite(z).any():
-        bound = np.nanmax(np.abs(z))
-        kwargs["vmin"] = -bound
-        kwargs["vmax"] = bound
-
-    mesh = ax.pcolormesh(_dose_edges(x), _dose_edges(y), z, cmap=cmap, shading="auto", **kwargs)
-    mesh.colorbar = ax.figure.colorbar(mesh, ax=ax)
-    ax.set_xticks(x)
-    ax.set_yticks(y)
-    if title is not None:
-        ax.set_title(title)
-    if xlabel is not None:
-        ax.set_xlabel(xlabel)
-    if ylabel is not None:
-        ax.set_ylabel(ylabel)
-
-
-class CCG_synergy:
-    """Data class for CCG synergy analysis
+class DrugSynergy:
+    """Data class for druh synergy analysis
     Assuming the experiment is a dose-titration experiment with 2 drugs
     happening in the middle 60 wells of a 96-well plate
     """
@@ -122,7 +78,7 @@ class CCG_synergy:
         
         return df
 
-def read_CCG_synergy_data(filename):
+def read_synergy_data(filename):
     data = pd.read_csv(filename,sep='\t', header=0, index_col=None, skiprows=1)
 
     #TODO: come up with a better way to get the treatment names
@@ -155,9 +111,4 @@ def read_CCG_synergy_data(filename):
     df['viability'] = (df['ctg'] / df['baseline'])
     del df['baseline']
 
-    return CCG_synergy(df, wide_treatment, narrow_treatment)
-
-
-# Backward compatibility aliases
-CTG_synergy = CCG_synergy
-read_CTG_synergy_data = read_CCG_synergy_data
+    return DrugSynergy(df, wide_treatment, narrow_treatment)
