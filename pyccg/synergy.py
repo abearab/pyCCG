@@ -76,51 +76,6 @@ class CCG_synergy:
 
         return df
     
-    def plot_synergy_heatmap(self, query, ax, value_col='viability', xlabel='auto', ylabel='auto', remove_ticks=False, title=None, cmap="PRGn", colorbar=True, **args):
-        if isinstance(ax, np.ndarray):
-            if ax.size == 0:
-                raise ValueError("ax cannot be an empty ndarray")
-            ax = ax.flat[0]
-        
-        # calculate bliss synergy if needed
-        if value_col in ['bliss','loewe'] and value_col not in self.df.columns:
-            df = self.calculate_synergy(method=value_col, inplace=False)
-
-        df = self._ave_replicates(value_col=value_col).query(query).copy()
-
-        # Prepare the input data to be fit
-        d1 = df[self.wide_treatment].to_numpy().astype(float)
-        d2 = df[self.narrow_treatment].to_numpy().astype(float)
-        E = df[value_col].to_numpy().astype(float)
-
-        if xlabel == 'auto':
-            xlabel = self.wide_treatment
-        if ylabel == 'auto':
-            ylabel = self.narrow_treatment
-
-        _plot_heatmap(
-            d1, d2, 
-            E, 
-            title=title,
-            xlabel=f"\n{xlabel}", ylabel=f"{ylabel}\n",
-            cmap=cmap,
-            # center_on_zero=True,
-            # vmin=-1, vmax=1,
-            ax=ax,
-            **args
-        )
-        if remove_ticks:
-            # remove ticks and ticks bar
-            ax.set_xticks([])
-            ax.set_yticks([])
-            ax.tick_params(axis='both', which='both', length=0)
-        
-        if not colorbar:
-            # remove color bar from plot
-            ax.collections[0].colorbar.remove()
-
-        # TODO: Use dose range from data to set x/y-ticks
-        # ax.set_xticks(df.Idasanutlin.unique().round(decimals=2).astype(str).tolist())
 
     def calculate_synergy(self, method='bliss', inplace=True, **kwargs):
         #TODO add checks here
