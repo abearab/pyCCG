@@ -4,7 +4,7 @@ from synergy.combination import Bliss
 from synergy.combination.loewe import Loewe
 
 
-class DrugSynergy:
+class SynergyData:
     """Data class for druh synergy analysis
     Assuming the experiment is a dose-titration experiment with 2 drugs
     happening in the middle 60 wells of a 96-well plate
@@ -111,4 +111,4 @@ def read_synergy_data(filename):
     df['viability'] = (df['ctg'] / df['baseline'])
     del df['baseline']
 
-    return DrugSynergy(df, wide_treatment, narrow_treatment)
+    return SynergyData(df, wide_treatment, narrow_treatment)
