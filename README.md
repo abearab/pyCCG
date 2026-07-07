@@ -1,1 +1,4 @@
-**pyCTG – python toolbox for CellTiter-Glo® cell viability assay**
+**pyCCG – Computational Chemical Genetics in Python**
+---
+features
+- dose-response analysis and plotting

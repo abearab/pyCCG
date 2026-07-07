@@ -4,8 +4,8 @@ from synergy.combination import Bliss
 from synergy.combination.loewe import Loewe
 
 
-class CTG_synergy:
-    """Data class for CTG synergy analysis
+class DrugSynergy:
+    """Data class for druh synergy analysis
     Assuming the experiment is a dose-titration experiment with 2 drugs
     happening in the middle 60 wells of a 96-well plate
     """
@@ -78,7 +78,7 @@ class CTG_synergy:
         
         return df
 
-def read_CTG_synergy_data(filename):
+def read_synergy_data(filename):
     data = pd.read_csv(filename,sep='\t', header=0, index_col=None, skiprows=1)
 
     #TODO: come up with a better way to get the treatment names
@@ -111,4 +111,4 @@ def read_CTG_synergy_data(filename):
     df['viability'] = (df['ctg'] / df['baseline'])
     del df['baseline']
 
-    return CTG_synergy(df, wide_treatment, narrow_treatment)
+    return DrugSynergy(df, wide_treatment, narrow_treatment)
