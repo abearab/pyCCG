@@ -81,7 +81,7 @@ class SynergyData:
         else:
             return df        
     
-    def heatmap_df(self, value_col, query=None, dose_unit="nM"):
+    def heatmap_df(self, value_col, query=None, wide_dose_unit="nM", narrow_dose_unit="nM"):
         """
         Return a pivoted DataFrame suitable for plotting a heatmap.
 
@@ -131,14 +131,19 @@ class SynergyData:
         )
 
         # Add units to the index and columns (round to 2 decimals)
-        if dose_unit == "nM":
-            heatmap_df.index = heatmap_df.index.round(2).astype(str) + "(nM)"
+        if wide_dose_unit == "nM":
             heatmap_df.columns = heatmap_df.columns.round(2).astype(str) + "(nM)"
-        elif dose_unit == "uM":
-            heatmap_df.index = (heatmap_df.index / 1000).round(2).astype(str) + "(uM)"
+        elif wide_dose_unit == "uM":
             heatmap_df.columns = (heatmap_df.columns / 1000).round(2).astype(str) + "(uM)"
         else:
-            raise ValueError(f"Unsupported unit: {dose_unit}, please use 'nM' or 'uM'.")
+            raise ValueError(f"Unsupported wide dose unit: {wide_dose_unit}, please use 'nM' or 'uM'.")
+
+        if narrow_dose_unit == "nM":
+            heatmap_df.index = heatmap_df.index.round(2).astype(str) + "(nM)"
+        elif narrow_dose_unit == "uM":
+            heatmap_df.index = (heatmap_df.index / 1000).round(2).astype(str) + "(uM)"
+        else:
+            raise ValueError(f"Unsupported narrow dose unit: {narrow_dose_unit}, please use 'nM' or 'uM'.")
 
         return heatmap_df
 
@@ -160,8 +165,8 @@ class SynergyData:
         vmax=None,
         drop_wide_dose=None,
         drop_narrow_dose=None,
-        dose_scale=1000.0,
-        dose_unit="uM",
+        wide_dose_unit="nM",
+        narrow_dose_unit="nM",
         tick_fontsize=8,
         x_rotation=30,
         y_rotation=0,
@@ -185,7 +190,7 @@ class SynergyData:
             fig, ax = plt.subplots()
 
         heatmap_df = self.heatmap_df(
-            value_col=value_col, dose_unit=dose_unit
+            value_col=value_col, wide_dose_unit=wide_dose_unit, narrow_dose_unit=narrow_dose_unit
         )
         df = heatmap_df.copy()
 
