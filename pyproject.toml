@@ -1,6 +1,6 @@
 [project]
 name = "pyccg"
-version = "0.0.1"
+version = "0.0.2"
 description = "Python framework for dose-response analysis and plotting"
 readme = "README.md"
 requires-python = ">=3.9"
