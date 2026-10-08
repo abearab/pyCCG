@@ -34,7 +34,7 @@ class SynergyData:
             raise ValueError(f"expected {self.wide_treatment} or {self.narrow_treatment}")
 
         df = self.df.copy()
-        df = df.query(f'{other_treatment_col} == {treatment_dose}').drop(columns=[other_treatment_col])
+        df = df.query(f'`{other_treatment_col}` == {treatment_dose}').drop(columns=[other_treatment_col])
 
         df = df.rename(columns={treatment_col: 'Compound Conc'})
         df.insert(0, 'treatment', treatment_col)
@@ -292,7 +292,7 @@ class SynergyData:
         return ax
 
 
-def read_synergy_data(filename):
+def read_synergy_data(filename, dose_unit='nM'):
     data = pd.read_csv(filename,sep='\t', header=0, index_col=None, skiprows=1)
 
     #TODO: come up with a better way to get the treatment names
@@ -304,8 +304,14 @@ def read_synergy_data(filename):
         value_name='ctg', 
         var_name=wide_treatment
     )
-    df[wide_treatment] = df[wide_treatment].astype(float) * 1000 # convert to nM
-    df[narrow_treatment] = df[narrow_treatment].astype(float) * 1000 # convert to nM
+    if dose_unit == 'nM':
+        df[wide_treatment] = df[wide_treatment].astype(float) * 1000 # convert to nM
+        df[narrow_treatment] = df[narrow_treatment].astype(float) * 1000 # convert to nM
+    elif dose_unit == 'uM':
+        df[wide_treatment] = df[wide_treatment].astype(float) # already in uM
+        df[narrow_treatment] = df[narrow_treatment].astype(float) # already in uM
+    else:
+        raise ValueError(f"Unsupported dose unit: {dose_unit}")
 
     # round to 3 decimals
     for col in ['ctg', narrow_treatment, wide_treatment]:
