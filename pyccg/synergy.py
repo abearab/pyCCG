@@ -299,7 +299,7 @@ class SynergyData:
         return ax
 
 
-def read_synergy_data(filename, wide_dose_unit='nM', narrow_dose_unit='nM'):
+def read_synergy_data(filename, wide_dose_unit='uM', narrow_dose_unit='uM'):
     """Read synergy data from a CSV file.
 
     Parameters
@@ -307,9 +307,9 @@ def read_synergy_data(filename, wide_dose_unit='nM', narrow_dose_unit='nM'):
     filename : str
         Path to the CSV file containing synergy data.
     wide_dose_unit : str, optional
-        Unit of the wide treatment dose (default is 'nM').
+        Unit of the wide treatment dose (default is 'uM').
     narrow_dose_unit : str, optional
-        Unit of the narrow treatment dose (default is 'nM').
+        Unit of the narrow treatment dose (default is 'uM').
 
     Returns
     -------
