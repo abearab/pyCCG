@@ -299,16 +299,16 @@ class SynergyData:
         return ax
 
 
-def read_synergy_data(filename, wide_treatment_dose_unit='nM', narrow_treatment_dose_unit='nM'):
+def read_synergy_data(filename, wide_dose_unit='nM', narrow_dose_unit='nM'):
     """Read synergy data from a CSV file.
 
     Parameters
     ----------
     filename : str
         Path to the CSV file containing synergy data.
-    wide_treatment_dose_unit : str, optional
+    wide_dose_unit : str, optional
         Unit of the wide treatment dose (default is 'nM').
-    narrow_treatment_dose_unit : str, optional
+    narrow_dose_unit : str, optional
         Unit of the narrow treatment dose (default is 'nM').
 
     Returns
@@ -328,19 +328,19 @@ def read_synergy_data(filename, wide_treatment_dose_unit='nM', narrow_treatment_
         value_name='ctg', 
         var_name=wide_treatment
     )
-    if wide_treatment_dose_unit == 'uM':
+    if wide_dose_unit == 'uM':
         df[wide_treatment] = df[wide_treatment].astype(float) * 1000 # convert to nM
-    elif wide_treatment_dose_unit == 'nM':
+    elif wide_dose_unit == 'nM':
         df[wide_treatment] = df[wide_treatment].astype(float) # already in nM
     else:
-        raise ValueError(f"Unsupported wide treatment dose unit: {wide_treatment_dose_unit}")
+        raise ValueError(f"Unsupported wide treatment dose unit: {wide_dose_unit}")
 
-    if narrow_treatment_dose_unit == 'uM':
+    if narrow_dose_unit == 'uM':
         df[narrow_treatment] = df[narrow_treatment].astype(float) * 1000 # convert to nM
-    elif narrow_treatment_dose_unit == 'nM':
+    elif narrow_dose_unit == 'nM':
         df[narrow_treatment] = df[narrow_treatment].astype(float) # already in nM
     else:
-        raise ValueError(f"Unsupported narrow treatment dose unit: {narrow_treatment_dose_unit}")
+        raise ValueError(f"Unsupported narrow treatment dose unit: {narrow_dose_unit}")
 
     # round to 3 decimals
     for col in ['ctg', narrow_treatment, wide_treatment]:
@@ -363,8 +363,8 @@ def read_synergy_data(filename, wide_treatment_dose_unit='nM', narrow_treatment_
     out = SynergyData(
         df, 
         wide_treatment, narrow_treatment, 
-        wide_treatment_dose_unit=wide_treatment_dose_unit, 
-        narrow_treatment_dose_unit=narrow_treatment_dose_unit
+        wide_dose_unit=wide_dose_unit, 
+        narrow_dose_unit=narrow_dose_unit
     )
 
     return out
