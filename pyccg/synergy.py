@@ -11,12 +11,12 @@ class SynergyData:
     Assuming the experiment is a dose-titration experiment with 2 drugs
     happening in the middle 60 wells of a 96-well plate
     """
-    def __init__(self, df, wide_treatment, narrow_treatment, wide_treatment_dose_unit='nM', narrow_treatment_dose_unit='nM'):
+    def __init__(self, df, wide_treatment, narrow_treatment, wide_dose_unit='nM', narrow_dose_unit='nM'):
         self.df = df
         self.wide_treatment = wide_treatment
         self.narrow_treatment = narrow_treatment
-        self.wide_treatment_dose_unit = wide_treatment_dose_unit
-        self.narrow_treatment_dose_unit = narrow_treatment_dose_unit
+        self.wide_dose_unit = wide_dose_unit
+        self.narrow_dose_unit = narrow_dose_unit
     
     def _ave_replicates(self, value_col):
         df = self.df.copy()
@@ -81,7 +81,7 @@ class SynergyData:
         else:
             return df        
     
-    def heatmap_df(self, value_col, query=None, wide_dose_unit="nM", narrow_dose_unit="nM"):
+    def heatmap_df(self, value_col, wide_dose_unit, narrow_dose_unit, query=None):
         """
         Return a pivoted DataFrame suitable for plotting a heatmap.
 
