@@ -11,10 +11,12 @@ class SynergyData:
     Assuming the experiment is a dose-titration experiment with 2 drugs
     happening in the middle 60 wells of a 96-well plate
     """
-    def __init__(self, df, wide_treatment, narrow_treatment):
+    def __init__(self, df, wide_treatment, narrow_treatment, wide_treatment_dose_unit='nM', narrow_treatment_dose_unit='nM'):
         self.df = df
         self.wide_treatment = wide_treatment
         self.narrow_treatment = narrow_treatment
+        self.wide_treatment_dose_unit = wide_treatment_dose_unit
+        self.narrow_treatment_dose_unit = narrow_treatment_dose_unit
     
     def _ave_replicates(self, value_col):
         df = self.df.copy()
@@ -292,7 +294,24 @@ class SynergyData:
         return ax
 
 
-def read_synergy_data(filename, dose_unit='nM'):
+def read_synergy_data(filename, wide_treatment_dose_unit='nM', narrow_treatment_dose_unit='nM'):
+    """Read synergy data from a CSV file.
+
+    Parameters
+    ----------
+    filename : str
+        Path to the CSV file containing synergy data.
+    wide_treatment_dose_unit : str, optional
+        Unit of the wide treatment dose (default is 'nM').
+    narrow_treatment_dose_unit : str, optional
+        Unit of the narrow treatment dose (default is 'nM').
+
+    Returns
+    -------
+    SynergyData
+        An instance of the SynergyData class containing the processed data.
+        Values are in nM for both wide and narrow treatments.
+    """
     data = pd.read_csv(filename,sep='\t', header=0, index_col=None, skiprows=1)
 
     #TODO: come up with a better way to get the treatment names
@@ -304,14 +323,19 @@ def read_synergy_data(filename, dose_unit='nM'):
         value_name='ctg', 
         var_name=wide_treatment
     )
-    if dose_unit == 'nM':
+    if wide_treatment_dose_unit == 'uM':
         df[wide_treatment] = df[wide_treatment].astype(float) * 1000 # convert to nM
-        df[narrow_treatment] = df[narrow_treatment].astype(float) * 1000 # convert to nM
-    elif dose_unit == 'uM':
-        df[wide_treatment] = df[wide_treatment].astype(float) # already in uM
-        df[narrow_treatment] = df[narrow_treatment].astype(float) # already in uM
+    elif wide_treatment_dose_unit == 'nM':
+        df[wide_treatment] = df[wide_treatment].astype(float) # already in nM
     else:
-        raise ValueError(f"Unsupported dose unit: {dose_unit}")
+        raise ValueError(f"Unsupported wide treatment dose unit: {wide_treatment_dose_unit}")
+
+    if narrow_treatment_dose_unit == 'uM':
+        df[narrow_treatment] = df[narrow_treatment].astype(float) * 1000 # convert to nM
+    elif narrow_treatment_dose_unit == 'nM':
+        df[narrow_treatment] = df[narrow_treatment].astype(float) # already in nM
+    else:
+        raise ValueError(f"Unsupported narrow treatment dose unit: {narrow_treatment_dose_unit}")
 
     # round to 3 decimals
     for col in ['ctg', narrow_treatment, wide_treatment]:
@@ -331,4 +355,11 @@ def read_synergy_data(filename, dose_unit='nM'):
     df['viability'] = (df['ctg'] / df['baseline'])
     del df['baseline']
 
-    return SynergyData(df, wide_treatment, narrow_treatment)
+    out = SynergyData(
+        df, 
+        wide_treatment, narrow_treatment, 
+        wide_treatment_dose_unit=wide_treatment_dose_unit, 
+        narrow_treatment_dose_unit=narrow_treatment_dose_unit
+    )
+
+    return out
